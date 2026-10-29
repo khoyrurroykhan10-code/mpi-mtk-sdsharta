@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Perkalian Puluhan Bersusun Interaktif</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .digit-box {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-blue-50 to-emerald-50 min-h-screen text-slate-800 flex flex-col items-center justify-between p-4 md:p-8">
+
+    <header class="w-full max-w-4xl text-center mb-6">
+        <div class="inline-block bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">
+            Media Pembelajaran Interaktif (MPI)
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Simulasi Perkalian Puluhan Bersusun
+        </h1>
+        <p class="text-slate-600 mt-1 text-sm md:text-base">
+            Pahami langkah demi langkah perkalian cara menurun detail per digit dengan kotak simpanan!
+        </p>
+    </header>
+
+    <main class="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden grid grid-cols-1 md:grid-cols-12 mb-6">
+        
+        <!-- Left Panel: Control & Explanation -->
+        <div class="md:col-span-5 p-6 md:p-8 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Panel Kontrol & Angka
+                </h2>
+
+                <!-- Custom Number Inputs -->
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Angka yang Dikalikan (10 - 999)</label>
+                        <input type="number" id="inputNum1" value="35" min="10" max="999" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl font-bold text-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Pengali (10 - 99)</label>
+                        <input type="number" id="inputNum2" value="12" min="10" max="99" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl font-bold text-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="terapkanAngka()" class="flex-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            <span>Terapkan</span>
+                        </button>
+                        <button onclick="acakAngka()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Acak Angka</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explanation Box -->
+                <div class="bg-blue-50/70 border border-blue-200/60 rounded-2xl p-4">
+                    <h3 class="text-xs font-bold text-blue-800 uppercase tracking-wider mb-1">Penjelasan Langkah:</h3>
+                    <p id="explanationText" class="text-sm text-blue-900 leading-relaxed font-medium">
+                        Tekan tombol "Mulai / Lanjut" untuk melihat cara menghitung perkalian bersusun ke bawah secara detail per digit.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Simulation Controls -->
+            <div class="mt-6 pt-4 border-t border-slate-200 flex gap-2">
+                <button id="btnPrev" onclick="langkahSebelumnya()" disabled class="flex-1 bg-slate-200 text-slate-400 font-semibold py-2 px-3 rounded-xl transition cursor-not-allowed">
+                    Sebelumnya
+                </button>
+                <button id="btnNext" onclick="langkahBerikutnya()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold py-2 px-3 rounded-xl shadow-md transition">
+                    Mulai / Lanjut
+                </button>
+                <button onclick="resetSimulasi()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 px-3 rounded-xl transition">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visual Stacked Multiplication Display with Grid Boxes -->
+        <div class="md:col-span-7 p-6 md:p-8 flex flex-col items-center justify-center bg-white relative min-h-[420px]">
+            <div class="absolute top-4 right-4 text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">
+                Langkah <span id="currentStepNum">0</span> dari <span id="totalStepNum">0</span>
+            </div>
+
+            <!-- Mathematical Grid Board -->
+            <div id="mathBoard" class="flex flex-col items-end my-auto py-6 px-8 bg-slate-50/90 border border-slate-200/90 rounded-2xl shadow-inner min-w-[320px]">
+                
+                <!-- Carrying / Simpanan Row -->
+                <div class="flex gap-2 mb-2 items-center w-full justify-end">
+                    <span class="text-xs font-bold text-amber-600 mr-1 uppercase tracking-tight">Simpanan:</span>
+                    <div id="carryRow" class="flex gap-2">
+                        <!-- Dynamically filled carry boxes -->
+                    </div>
+                </div>
+
+                <!-- Row 1: Top Number Grid -->
+                <div id="rowNum1" class="flex gap-2 mb-2">
+                    <!-- Dynamically filled boxes -->
+                </div>
+
+                <!-- Row 2: Bottom Number Grid with Operator -->
+                <div class="flex items-center justify-between w-full border-b-4 border-slate-800 pb-3 mb-3">
+                    <span class="text-2xl font-black text-indigo-600 mr-3">×</span>
+                    <div id="rowNum2" class="flex gap-2">
+                        <!-- Dynamically filled boxes -->
+                    </div>
+                </div>
+
+                <!-- Partial Products / Hasil Kali Antara -->
+                <div id="partialRow1" class="flex gap-2 mb-2 text-slate-400 min-h-[3.5rem] items-center"></div>
+                <div id="partialRow2" class="flex gap-2 mb-2 text-slate-400 min-h-[3.5rem] items-center"></div>
+
+                <!-- Final Addition Line -->
+                <div id="finalBorder" class="w-full border-b-4 border-slate-800 my-2 hidden"></div>
+                
+                <!-- Result Row -->
+                <div id="rowResult" class="flex gap-2 text-emerald-600 min-h-[3.5rem] items-center"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center text-xs text-slate-500">
+        Media Pembelajaran Interaktif Matematika &bull; Dibuat dengan Kotak Angka & Simpanan Detail
+    </footer>
+
+    <script>
+        let num1 = 35;
+        let num2 = 12;
+        let currentStep = 0;
+        let steps = [];
+
+        // DOM elements
+        const inputNum1 = document.getElementById('inputNum1');
+        const inputNum2 = document.getElementById('inputNum2');
+        const rowNum1 = document.getElementById('rowNum1');
+        const rowNum2 = document.getElementById('rowNum2');
+        const carryRow = document.getElementById('carryRow');
+        const partialRow1 = document.getElementById('partialRow1');
+        const partialRow2 = document.getElementById('partialRow2');
+        const finalBorder = document.getElementById('finalBorder');
+        const rowResult = document.getElementById('rowResult');
+        const explanationText = document.getElementById('explanationText');
+        const currentStepNum = document.getElementById('currentStepNum');
+        const totalStepNum = document.getElementById('totalStepNum');
+        const btnNext = document.getElementById('btnNext');
+        const btnPrev = document.getElementById('btnPrev');
+
+        // Initialize simulation on load
+        window.onload = function() {
+            terapkanAngka();
+        };
+
+        function acakAngka() {
+            const random1 = Math.floor(Math.random() * 950) + 25; // 25 - 974
+            const random2 = Math.floor(Math.random() * 85) + 12;   // 12 - 96
+
+            inputNum1.value = random1;
+            inputNum2.value = random2;
+            terapkanAngka();
+        }
+
+        function terapkanAngka() {
+            let val1 = parseInt(inputNum1.value);
+            let val2 = parseInt(inputNum2.value);
+
+            if (isNaN(val1) || val1 < 10) val1 = 35;
+            if (isNaN(val2) || val2 < 10) val2 = 12;
+
+            num1 = val1;
+            num2 = val2;
+
+            inputNum1.value = num1;
+            inputNum2.value = num2;
+
+            generateDetailedMicroSteps();
+            resetView();
+        }
+
+        function generateDetailedMicroSteps() {
+            steps = [];
+            const sNum1 = num1.toString();
+            const sNum2 = num2.toString();
+            const len1 = sNum1.length;
+            const len2 = sNum2.length;
+
+            const satuanNum2 = parseInt(sNum2[len2 - 1]);
+            const puluhanNum2 = len2 > 1 ? parseInt(sNum2[len2 - 2]) : 0;
+
+            // 0. Initial step
+            steps.push({
+                desc: `Siapkan perkalian bersusun <b>${num1} × ${num2}</b>. Kita mulai mengalikan dari satuan pengali paling kanan (<span class="text-indigo-600 font-bold">${satuanNum2}</span>) dikalikan dengan angka-angka di atas dari kanan ke kiri.`,
+                action: 'init',
+                carries: Array(len1).fill('')
+            });
+
+            // --- PHASE 1: Satuan pengali (e.g. 2 in 12) ---
+            let carry = 0;
+            let currentPartial1Digits = Array(len1).fill('');
+            let currentCarries1 = Array(len1).fill('');
+
+            // Loop right to left for Num1 digits multiplied by satuanNum2
+            for (let i = len1 - 1; i >= 0; i--) {
+                let digit1 = parseInt(sNum1[i]);
+                let product = (digit1 * satuanNum2) + carry;
+                let writeVal = product % 10;
+                let nextCarry = Math.floor(product / 10);
+
+                let carryDisplayArr = [...currentCarries1];
+                if (nextCarry > 0 && i > 0) {
+                    carryDisplayArr[i - 1] = nextCarry.toString();
+                }
+
+                currentPartial1Digits[i] = writeVal.toString();
+
+                let stepTitle = `Kalikan satuan <b>${satuanNum2}</b> dengan <b>${digit1}</b>`;
+                if (carry > 0) {
+                    stepTitle += ` (ditambah simpanan <b>${carry}</b>)`;
+                }
+                stepTitle += ` = <b>${product}</b>.`;
+
+                let subDesc = `${stepTitle} Tulis <b>${writeVal}</b> di posisi bawah`;
+                if (nextCarry > 0 && i > 0) {
+                    subDesc += `, simpan <b>${nextCarry}</b> di atas kotak sebelah kiri.`;
+                } else if (nextCarry > 0 && i === 0) {
+                    subDesc += `, dan tulis angka simpanan <b>${nextCarry}</b> langsung di depannya.`;
+                } else {
+                    subDesc += `.`;
+                }
+
+                steps.push({
+                    desc: subDesc,
+                    action: 'partial1_building',
+                    partial1Arr: [...currentPartial1Digits],
+                    carries: [...carryDisplayArr],
+                    activeCol: i
+                });
+
+                carry = nextCarry;
+                currentCarries1 = [...carryDisplayArr];
+            }
+
+            // If there's remaining carry at the end of phase 1
+            if (carry > 0) {
+                currentPartial1Digits.unshift(carry.toString());
+                steps.push({
+                    desc: `Menuliskan sisa simpanan terakhir <b>${carry}</b> ke depan hasil perkalian pertama. Baris pertama selesai: <b>${currentPartial1Digits.join('')}</b>.`,
+                    action: 'partial1_building',
+                    partial1Arr: [...currentPartial1Digits],
+                    carries: Array(len1).fill(''),
+                    activeCol: -1
+                });
+            } else {
+                steps.push({
+                    desc: `Hasil perkalian baris pertama (dengan satuan ${satuanNum2}) adalah <b>${currentPartial1Digits.join('')}</b>.`,
+                    action: 'partial1_building',
+                    partial1Arr: [...currentPartial1Digits],
+                    carries: Array(len1).fill(''),
+                    activeCol: -1
+                });
+            }
+
+            let fullResult1Str = currentPartial1Digits.join('');
+
+            // --- PHASE 2: Puluhan pengali (e.g. 1 in 12) if len2 >= 2 ---
+            if (len2 >= 2) {
+                steps.push({
+                    desc: `Sekarang kita beralih ke angka puluhan pengali yaitu <b>${puluhanNum2}</b>. Hasil perkalian ini ditulis sejajar langsung di bawahnya (tanpa perlu menambah angka 0 di belakang).`,
+                    action: 'shift_to_phase2',
+                    partial1Str: fullResult1Str,
+                    carries: Array(len1).fill('')
+                });
+
+                carry = 0;
+                let currentPartial2Digits = Array(len1 - 1).fill(''); // shift 1 position right alignment relative to row 1
+                let currentCarries2 = Array(len1).fill('');
+
+                for (let i = len1 - 1; i >= 0; i--) {
+                    let digit1 = parseInt(sNum1[i]);
+                    let product = (digit1 * puluhanNum2) + carry;
+                    let writeVal = product % 10;
+                    let nextCarry = Math.floor(product / 10);
+
+                    let carryDisplayArr = [...currentCarries2];
+                    if (nextCarry > 0 && i > 0) {
+                        carryDisplayArr[i - 1] = nextCarry.toString();
+                    }
+
+                    // For shifted alignment, index i maps to position i in row2 array
+                    currentPartial2Digits[i] = writeVal.toString();
+
+                    let stepTitle = `Kalikan puluhan <b>${puluhanNum2}</b> dengan <b>${digit1}</b>`;
+                    if (carry > 0) {
+                        stepTitle += ` (ditambah simpanan <b>${carry}</b>)`;
+                    }
+                    stepTitle += ` = <b>${product}</b>.`;
+
+                    let subDesc = `${stepTitle} Tulis <b>${writeVal}</b> sejajar di bawahnya`;
+                    if (nextCarry > 0 && i > 0) {
+                        subDesc += `, simpan <b>${nextCarry}</b> di atas.`;
+                    } else if (nextCarry > 0 && i === 0) {
+                        subDesc += `, tulis <b>${nextCarry}</b> di depannya.`;
+                    } else {
+                        subDesc += `.`;
+                    }
+
+                    steps.push({
+                        desc: subDesc,
+                        action: 'partial2_building',
+                        partial1Str: fullResult1Str,
+                        partial2Arr: [...currentPartial2Digits],
+                        carries: [...carryDisplayArr],
+                        activeCol: i
+                    });
+
+                    carry = nextCarry;
+                    currentCarries2 = [...carryDisplayArr];
+                }
+
+                if (carry > 0) {
+                    currentPartial2Digits.unshift(carry.toString());
+                }
+
+                let fullResult2Str = currentPartial2Digits.join('');
+
+                // --- PHASE 3: Addition ---
+                let finalTotal = num1 * num2;
+                steps.push({
+                    desc: `Kedua baris perkalian sudah lengkap (${fullResult1Str} dan ${fullResult2Str}). Sekarang kita jumlahkan kedua baris tersebut ke bawah untuk mendapatkan hasil akhir.`,
+                    action: 'ready_to_add',
+                    partial1Str: fullResult1Str,
+                    partial2Str: fullResult2Str,
+                    carries: Array(len1).fill('')
+                });
+
+                steps.push({
+                    desc: `Hasil akhir perkalian <b>${num1} × ${num2}</b> adalah <span class="text-emerald-600 font-bold text-xl">${finalTotal}</span>! 🎉`,
+                    action: 'final_result',
+                    partial1Str: fullResult1Str,
+                    partial2Str: fullResult2Str,
+                    finalStr: finalTotal.toString(),
+                    carries: Array(len1).fill('')
+                });
+
+            } else {
+                let finalTotal = num1 * satuanNum2;
+                steps.push({
+                    desc: `Hasil akhir perkalian adalah <span class="text-emerald-600 font-bold text-xl">${finalTotal}</span>! 🎉`,
+                    action: 'final_result_single',
+                    partial1Str: fullResult1Str,
+                    finalStr: finalTotal.toString(),
+                    carries: Array(len1).fill('')
+                });
+            }
+
+            totalStepNum.innerText = steps.length - 1;
+            currentStep = 0;
+        }
+
+        function resetView() {
+            currentStep = 0;
+            currentStepNum.innerText = "0";
+            
+            renderGrids();
+            explanationText.innerHTML = `Tekan tombol "Mulai / Lanjut" untuk memulai simulasi perkalian ${num1} × ${num2}.`;
+            
+            btnPrev.disabled = true;
+            btnPrev.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btnPrev.classList.remove('bg-slate-300', 'text-slate-700');
+            btnNext.disabled = false;
+            btnNext.innerText = "Mulai / Lanjut";
+        }
+
+        function renderGrids() {
+            const sNum1 = num1.toString();
+            const sNum2 = num2.toString();
+
+            // Render carry boxes (same length as num1)
+            carryRow.innerHTML = '';
+            for (let i = 0; i < sNum1.length; i++) {
+                const box = document.createElement('div');
+                box.className = "digit-box bg-amber-50 border-2 border-dashed border-amber-300 text-amber-700 text-sm";
+                box.id = `carry-${i}`;
+                box.innerText = "";
+                carryRow.appendChild(box);
+            }
+
+            // Render rowNum1 boxes
+            rowNum1.innerHTML = '';
+            for (let i = 0; i < sNum1.length; i++) {
+                const box = document.createElement('div');
+                box.className = "digit-box bg-slate-100 border-2 border-slate-300 text-slate-800 text-xl md:text-2xl shadow-sm";
+                box.innerText = sNum1[i];
+                rowNum1.appendChild(box);
+            }
+
+            // Render rowNum2 boxes
+            rowNum2.innerHTML = '';
+            for (let i = 0; i < sNum2.length; i++) {
+                const box = document.createElement('div');
+                box.className = "digit-box bg-indigo-50 border-2 border-indigo-300 text-indigo-700 text-xl md:text-2xl shadow-sm";
+                box.innerText = sNum2[i];
+                rowNum2.appendChild(box);
+            }
+
+            partialRow1.innerHTML = '';
+            partialRow2.innerHTML = '';
+            finalBorder.classList.add('hidden');
+            rowResult.innerHTML = '';
+        }
+
+        function langkahBerikutnya() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                renderStep();
+            }
+        }
+
+        function langkahSebelumnya() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            }
+        }
+
+        function renderStep() {
+            currentStepNum.innerText = currentStep;
+            const step = steps[currentStep];
+            explanationText.innerHTML = step.desc;
+
+            // Handle button states
+            if (currentStep > 0) {
+                btnPrev.disabled = false;
+                btnPrev.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+                btnPrev.classList.add('bg-slate-300', 'text-slate-700');
+            } else {
+                btnPrev.disabled = true;
+                btnPrev.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+                btnPrev.classList.remove('bg-slate-300', 'text-slate-700');
+            }
+
+            if (currentStep === steps.length - 1) {
+                btnNext.innerText = "Selesai";
+            } else {
+                btnNext.innerText = "Lanjut";
+            }
+
+            // Update Carry boxes
+            const sNum1 = num1.toString();
+            for (let i = 0; i < sNum1.length; i++) {
+                const cBox = document.getElementById(`carry-${i}`);
+                if (step.carries && step.carries[i]) {
+                    cBox.innerText = step.carries[i];
+                    cBox.className = "digit-box bg-amber-100 border-2 border-amber-400 text-amber-800 text-sm animate-pop font-bold";
+                } else {
+                    cBox.innerText = "";
+                    cBox.className = "digit-box bg-amber-50 border-2 border-dashed border-amber-300 text-amber-700 text-sm";
+                }
+            }
+
+            // Render rows based on action type
+            if (step.action === 'init') {
+                partialRow1.innerHTML = '';
+                partialRow2.innerHTML = '';
+                finalBorder.classList.add('hidden');
+                rowResult.innerHTML = '';
+            } else if (step.action === 'partial1_building') {
+                renderAlignedNumber(partialRow1, step.partial1Arr.join(''), 'right', 'text-slate-700 bg-blue-50 border-blue-200 animate-pop');
+                partialRow2.innerHTML = '';
+                finalBorder.classList.add('hidden');
+                rowResult.innerHTML = '';
+            } else if (step.action === 'shift_to_phase2') {
+                renderAlignedNumber(partialRow1, step.partial1Str, 'right', 'text-slate-700 bg-blue-50 border-blue-200');
+                partialRow2.innerHTML = '';
+                finalBorder.classList.add('hidden');
+                rowResult.innerHTML = '';
+            } else if (step.action === 'partial2_building') {
+                renderAlignedNumber(partialRow1, step.partial1Str, 'right', 'text-slate-700 bg-blue-50 border-blue-200');
+                // Aligned right relative to second multiplier digit (shifted 1 position left compared to bottom right)
+                renderAlignedNumber(partialRow2, step.partial2Arr.join(''), 'shift_right', 'text-slate-700 bg-indigo-50 border-indigo-200 animate-pop');
+                finalBorder.classList.add('hidden');
+                rowResult.innerHTML = '';
+            } else if (step.action === 'ready_to_add') {
+                renderAlignedNumber(partialRow1, step.partial1Str, 'right', 'text-slate-700 bg-blue-50 border-blue-200');
+                renderAlignedNumber(partialRow2, step.partial2Str, 'shift_right', 'text-slate-700 bg-indigo-50 border-indigo-200');
+                finalBorder.classList.remove('hidden');
+                rowResult.innerHTML = '';
+            } else if (step.action === 'final_result') {
+                renderAlignedNumber(partialRow1, step.partial1Str, 'right', 'text-slate-700 bg-blue-50 border-blue-200');
+                renderAlignedNumber(partialRow2, step.partial2Str, 'shift_right', 'text-slate-700 bg-indigo-50 border-indigo-200');
+                finalBorder.classList.remove('hidden');
+                renderAlignedNumber(rowResult, step.finalStr, 'right', 'text-emerald-700 bg-emerald-50 border-emerald-300 font-black animate-pop');
+            } else if (step.action === 'final_result_single') {
+                renderAlignedNumber(partialRow1, step.partial1Str, 'right', 'text-slate-700 bg-blue-50 border-blue-200');
+                finalBorder.classList.add('hidden');
+                renderAlignedNumber(rowResult, step.finalStr, 'right', 'text-emerald-700 bg-emerald-50 border-emerald-300 font-black animate-pop');
+            }
+        }
+
+        function renderAlignedNumber(container, numberStr, alignment, boxClasses) {
+            container.innerHTML = '';
+            const sNum1 = num1.toString();
+            const sNum2 = num2.toString();
+            
+            // Total grid columns standard is num1 length + 2 padding space for alignment shifts
+            const totalCols = sNum1.length + 2;
+            let paddedStr = '';
+
+            if (alignment === 'right') {
+                paddedStr = numberStr.padStart(totalCols, ' ');
+            } else if (alignment === 'shift_right') {
+                // Shifted one position to the left (aligned with tens digit of multiplier)
+                paddedStr = numberStr.padStart(totalCols - 1, ' ').padEnd(totalCols, ' ');
+            }
+
+            for (let i = 0; i < totalCols; i++) {
+                const char = paddedStr[i];
+                const box = document.createElement('div');
+                if (char && char !== ' ') {
+                    box.className = `digit-box border-2 shadow-sm text-xl md:text-2xl ${boxClasses}`;
+                    box.innerText = char;
+                } else {
+                    box.className = `digit-box border-2 border-transparent bg-transparent text-transparent`;
+                    box.innerText = '';
+                }
+                container.appendChild(box);
+            }
+        }
+
+        function resetSimulasi() {
+            resetView();
+        }
+    </script>
+</body>
+</html>
+```
+eof
+
+### Pembaruan Utama yang Diterapkan:
+1. **Langkah Mikro Per Digit:** Sekarang simulasi mendemonstrasikan perhitungan perkalian satu per satu dari kanan ke kiri (misal: $5 \times 2 = 10$, simpan 1, tulis 0; lalu $3 \times 2 = 6$, tambah simpanan 1 menjadi 7).
+2. **Penjumlahan Simpanan Otomatis:** Setiap kali ada nilai yang disimpan, nilai tersebut otomatis ditampilkan di kotak **Simpanan** di bagian atas kolom yang sesuai.
+3. **Penyelarasan Baris Kedua (Puluhan Pengali):** Saat berpindah ke perkalian puluhan pengali (misal: $1 \times 5$), angka hasilnya disejajarkan langsung di bawah tanpa penambahan angka nol di belakang, sesuai dengan aturan bersusun tradisional.
